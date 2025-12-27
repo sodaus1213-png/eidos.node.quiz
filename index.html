@@ -4,328 +4,345 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>나의 공 색깔 테스트</title>
+
 <style>
-  body {
-    margin: 0;
-    font-family: 'Apple SD Gothic Neo', sans-serif;
-    background-color: #000;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-  }
-  canvas#particles {
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    pointer-events:none;
-    z-index:0;
-  }
-  h1 {
-    text-align: center;
-    color: gold;
-    margin-top: 40px;
-    font-size: 3em;
-    z-index:1;
-    position: relative;
-  }
-  .quiz-container {
-    margin-top: 50px;
-    width: 90%;
-    max-width: 600px;
-    perspective: 1000px;
-    z-index:1;
-  }
-  .question-card {
-    background: rgba(255,255,255,0.08);
-    border-radius: 25px;
-    padding: 40px 20px;
-    text-align: center;
-    box-shadow: 0 8px 25px rgba(255,255,255,0.2);
-    transform-style: preserve-3d;
-    transition: transform 0.5s ease, opacity 0.5s ease;
-    opacity: 1;
-  }
-  .options {
-    display: flex;
-    flex-direction: column;
-    margin-top: 25px;
-  }
-  .options label {
-    margin: 10px 0;
-    padding: 12px 0;
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-    text-align: center;
-  }
-  .options input[type="radio"] {
-    display: none;
-  }
-  .options input[type="radio"]:checked + span {
-    background: gold;
-    color: #000;
-  }
-  .options span {
-    display: block;
-    padding: 12px 0;
-    border-radius: 12px;
-    transition: 0.3s;
-  }
-  .option-text {
-    font-size: 0.8em;
-    color: #ccc;
-    margin-top: 5px;
-  }
-  button {
-    margin-top: 30px;
-    padding: 12px 25px;
-    background: gold;
-    color: #000;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
-    z-index:1;
-    position: relative;
-  }
-  button:hover {
-    background: #fff;
-    color: #000;
-  }
-  .result-container {
-    margin-top: 50px;
-    width: 100%;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 1s ease;
-    display: none;
-    z-index:1;
-    position: relative;
-  }
-  .result-card {
-    width: 350px;
-    height: 500px;
-    margin: 0 auto;
-    background: linear-gradient(to top, #111, #222);
-    clip-path: polygon(10% 0%, 90% 0%, 100% 100%, 0% 100%);
-    border-radius: 20px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 50px;
-    transition: opacity 1s ease;
-  }
-  .circle-3d {
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    background: gold;
-    margin-bottom: 25px;
-    box-shadow: 0 0 100px 25px rgba(255,255,255,0.3),
-                inset 0 -15px 35px rgba(0,0,0,0.3);
-    transition: transform 1s ease, background 1s ease;
-  }
-  .result-text {
-    color: gold;
-    padding: 25px;
-    background: linear-gradient(0deg, rgba(255,215,0,0.1), transparent);
-    border-radius: 15px;
-    line-height: 1.6;
-    margin-top: 15px;
-    transition: opacity 1s ease;
-  }
+body{
+  margin:0;
+  background:#000;
+  color:#fff;
+  font-family:'Apple SD Gothic Neo',sans-serif;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+  overflow:hidden;
+}
+
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
+}
+
+/* ===== 타이틀 ===== */
+h1{
+  margin-top:40px;
+  color:gold;
+  z-index:1;
+  letter-spacing:1px;
+}
+
+/* ===== 퀴즈 ===== */
+.quiz-container{
+  width:90%;
+  max-width:620px;
+  margin-top:60px;
+  z-index:1;
+}
+
+.question-card{
+  background:rgba(255,255,255,.04);
+  border-radius:24px;
+  padding:46px 32px;
+  backdrop-filter:blur(8px);
+}
+
+/* ===== 선택지 ===== */
+.options{
+  margin-top:40px;
+  display:flex;
+  flex-direction:column;
+  gap:26px;
+}
+
+.option{
+  padding:22px 26px;
+  border-radius:18px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;
+  transition:.4s;
+}
+
+.option:hover{
+  background:rgba(255,255,255,.06);
+}
+
+.option.active{
+  border-color:rgba(255,215,0,.9);
+  box-shadow:0 0 22px rgba(255,215,0,.35);
+}
+
+.option-num{
+  font-size:.8em;
+  color:#888;
+  margin-bottom:10px;
+}
+
+.option-text{
+  font-size:1.05em;
+  line-height:1.6;
+}
+
+/* ===== 버튼 ===== */
+button{
+  margin-top:36px;
+  padding:14px 34px;
+  background:gold;
+  border:none;
+  font-weight:bold;
+  cursor:pointer;
+  z-index:1;
+}
+
+/* ===== 결과 ===== */
+.result-container{
+  display:none;
+  margin-top:70px;
+  z-index:1;
+}
+
+.result-trapezoid{
+  width:420px;
+  padding:60px 34px;
+  text-align:center;
+  clip-path:polygon(12% 0%,88% 0%,100% 100%,0% 100%);
+  position:relative;
+
+  /* 핵심 배경 */
+  background:
+    /* 위 스포트라이트 */
+    radial-gradient(
+      ellipse at top center,
+      rgba(255,255,255,.18) 0%,
+      rgba(255,255,255,.06) 25%,
+      rgba(0,0,0,0) 55%
+    ),
+    /* 기본 투명 블랙 */
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.55) 0%,
+      rgba(0,0,0,.82) 60%,
+      rgba(0,0,0,.92) 100%
+    );
+
+  backdrop-filter:blur(10px);
+  box-shadow:
+    0 0 60px rgba(0,0,0,.6),
+    inset 0 -10px 30px rgba(255,215,0,.18); /* 아래 금빛 */
+}
+
+/* 아래 금빛 가장자리 */
+.result-trapezoid::after{
+  content:"";
+  position:absolute;
+  left:8%;
+  right:8%;
+  bottom:-6px;
+  height:14px;
+  background:linear-gradient(
+    180deg,
+    rgba(255,215,0,.45),
+    rgba(255,215,0,0)
+  );
+  filter:blur(6px);
+}
+
+/* ===== 결과 원 ===== */
+.result-circle{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  margin:0 auto 30px;
+  box-shadow:
+    0 0 90px rgba(255,255,255,.35),
+    inset 0 -18px 35px rgba(0,0,0,.4);
+}
+
+.result-title{
+  font-size:1.45em;
+  margin-bottom:18px;
+}
+
+.result-text{
+  line-height:1.7;
+  margin-bottom:22px;
+}
+
+.result-sub{
+  font-size:.85em;
+  color:#aaa;
+  letter-spacing:.5px;
+}
 </style>
 </head>
+
 <body>
 
 <canvas id="particles"></canvas>
-
 <h1>나의 공 색깔 테스트</h1>
 
-<div class="quiz-container" id="quizContainer"></div>
-
+<div class="quiz-container" id="quiz"></div>
 <button id="nextBtn">다음</button>
 
-<div class="result-container" id="resultContainer">
-  <div class="result-card">
-    <div class="circle-3d" id="resultCircle"></div>
-    <h2 id="resultTitle"></h2>
-    <p class="result-text" id="resultText"></p>
+<div class="result-container" id="result">
+  <div class="result-trapezoid">
+    <div class="result-circle" id="resCircle"></div>
+    <div class="result-title" id="resTitle"></div>
+    <div class="result-text" id="resText"></div>
+    <div class="result-sub">지금 이 순간을 해석하는 하나의 관점.</div>
   </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function(){
-
-// 파티클
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-let particlesArray = [];
-
-function initParticles() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  particlesArray=[];
-  for(let i=0;i<120;i++){
-    particlesArray.push({
-      x: Math.random()*canvas.width,
-      y: Math.random()*canvas.height,
-      size: Math.random()*3+1,
-      speedX: Math.random()*0.5-0.25,
-      speedY: Math.random()*0.5-0.25,
-      alpha: Math.random()*0.8
+/* ===== 파티클 ===== */
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+let particles=[];
+function initParticles(){
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+  particles=[];
+  for(let i=0;i<160;i++){
+    particles.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*2+1,
+      type:Math.random()<0.65?"gold":"black",
+      dx:Math.random()-.35,
+      dy:Math.random()-.35
     });
   }
 }
-function animateParticles(){
+function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  particlesArray.forEach(p=>{
+  particles.forEach(p=>{
     ctx.beginPath();
-    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,215,0,${p.alpha})`;
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=p.type==="gold"
+      ?"rgba(255,215,0,.75)"
+      :"rgba(0,0,0,.9)";
     ctx.fill();
-    p.x+=p.speedX;
-    p.y+=p.speedY;
-    if(p.x>canvas.width)p.x=0;
-    if(p.x<0)p.x=canvas.width;
-    if(p.y>canvas.height)p.y=0;
-    if(p.y<0)p.y=canvas.height;
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x<0||p.x>canvas.width)p.dx*=-1;
+    if(p.y<0||p.y>canvas.height)p.dy*=-1;
   });
-  requestAnimationFrame(animateParticles);
+  requestAnimationFrame(animate);
 }
-window.addEventListener('resize', initParticles);
-initParticles();
-animateParticles();
+initParticles(); animate();
+addEventListener("resize",initParticles);
 
-// 질문 & 결과
-const questions = [
-  {q:"행복을 느낄 때 나는?", options:[
-      {text:"친구들과 함께 나눈다.", color:'gold'},
-      {text:"혼자서 있는게 행복이다.", color:'green'},
-      {text:"남들에게 자랑하는게 행복이다.", color:'red'},
-    ]
-  },
-  {q:"결정을 내릴 때 나는?", options:[
-      {text:"객관적으로 친구들에게 물어보는 편.", color:'blue'},
-      {text:"우유부단하여 못 고르는 편.", color:'silver'},
-      {text:"보자마자 선택하는 편.", color:'orange'},
-    ]
-  },
-  {q:"모험을 떠날 때 나는?", options:[
-      {text:"친구들과 함께 나눈다.", color:'gold'},
-      {text:"혼자 조용히 즐긴다.", color:'green'},
-      {text:"도전한 것을 남에게 보여준다.", color:'red'},
-    ]
-  },
-  {q:"스트레스를 받을 때 나는?", options:[
-      {text:"친구들과 이야기하며 푼다.", color:'blue'},
-      {text:"혼자만의 시간을 갖는다.", color:'green'},
-      {text:"주변에 과시하며 풀려고 한다.", color:'red'},
-    ]
-  },
-  {q:"새로운 것을 시도할 때 나는?", options:[
-      {text:"친구들과 같이 도전한다.", color:'orange'},
-      {text:"혼자 천천히 해본다.", color:'green'},
-      {text:"결과를 주변에 알린다.", color:'gold'},
-    ]
-  },
-  {q:"신중함이 필요한 상황에서 나는?", options:[
-      {text:"친구 의견을 참고한다.", color:'blue'},
-      {text:"혼자 깊이 생각한다.", color:'green'},
-      {text:"빠르게 결정하고 진행한다.", color:'orange'},
-    ]
-  },
-  {q:"자신의 감정을 표현할 때 나는?", options:[
-      {text:"친구들과 공유한다.", color:'gold'},
-      {text:"조용히 혼자 느낀다.", color:'green'},
-      {text:"주변에 보여준다.", color:'red'},
-    ]
-  }
+/* ===== 질문 9개 ===== */
+const questions=[
+{q:"행복을 느낄 때 나는?",o:[
+{text:"친구들과 함께 나눈다.",c:"gold"},
+{text:"혼자 있는 시간이 충분하다.",c:"green"},
+{text:"남들에게 보여주고 싶다.",c:"red"}
+]},
+{q:"결정을 내릴 때 나는?",o:[
+{text:"객관적으로 조언을 구한다.",c:"blue"},
+{text:"계속 고민하며 지켜본다.",c:"silver"},
+{text:"보자마자 선택한다.",c:"orange"}
+]},
+{q:"갈등 상황에서 나는?",o:[
+{text:"말하지 않고 넘긴다.",c:"black"},
+{text:"대화를 시도한다.",c:"blue"},
+{text:"즉각 반응한다.",c:"red"}
+]},
+{q:"선택을 미뤄야 할 때 나는?",o:[
+{text:"아무 결정도 하지 않는다.",c:"black"},
+{text:"정보를 더 모은다.",c:"silver"},
+{text:"임시 결정을 한다.",c:"orange"}
+]},
+{q:"새로운 도전 앞에서 나는?",o:[
+{text:"혼자 조용히 시작한다.",c:"green"},
+{text:"주변과 공유하며 시작한다.",c:"gold"},
+{text:"바로 실행한다.",c:"orange"}
+]},
+{q:"스트레스를 받을 때 나는?",o:[
+{text:"혼자 회복하는 편이다.",c:"green"},
+{text:"누군가에게 이야기한다.",c:"blue"},
+{text:"행동으로 풀어낸다.",c:"red"}
+]},
+{q:"감정을 표현할 때 나는?",o:[
+{text:"드러내지 않는 편이다.",c:"black"},
+{text:"조심스럽게 말한다.",c:"silver"},
+{text:"확실히 보여준다.",c:"red"}
+]},
+{q:"새로운 관계에서 나는?",o:[
+{text:"천천히 거리를 둔다.",c:"blue"},
+{text:"자연스럽게 스며든다.",c:"green"},
+{text:"먼저 다가간다.",c:"orange"}
+]},
+{q:"내 선택이 틀렸다고 느낄 때 나는?",o:[
+{text:"다시 돌아본다.",c:"silver"},
+{text:"회복해서 다시 간다.",c:"green"},
+{text:"끝까지 밀어붙인다.",c:"red"}
+]}
 ];
 
-const tabData = {
-    gold: { color: '#FFD700', title: '황금 — 행복', text: '행복은 오는 것이 아니라, 알아보는 것이다.\n지금 이 순간을 해석하는 하나의 관점.' },
-    blue: { color: '#1E90FF', title: '파랑 — 조심', text: '모든 선택은 속도가 아니라 각도를 요구한다.\n지금 이 순간을 해석하는 하나의 관점.' },
-    red: { color: '#FF4500', title: '빨강 — 충동', text: '망설이지 않은 선택은 기억에 남는다.\n지금 이 순간을 해석하는 하나의 관점.' },
-    black: { color: '#000', title: '검정 — 침묵', text: '말하지 않는 것도 하나의 응답이다.\n지금 이 순간을 해석하는 하나의 관점.' },
-    silver: { color: '#C0C0C0', title: '은색 — 의심', text: '의심 없는 믿음은 선택이 아니다.\n지금 이 순간을 해석하는 하나의 관점.' },
-    green: { color: '#32CD32', title: '초록 — 회복', text: '되돌아오는 데에도 방향이 있다.\n지금 이 순간을 해석하는 하나의 관점.' },
-    orange: { color: '#FFA500', title: '주황 — 시도', text: '결과보다 먼저 남는 것은 시도다.\n지금 이 순간을 해석하는 하나의 관점.' }
+const colorData={
+gold:{color:"#FFD700",title:"황금 — 행복",text:"행복은 오는 것이 아니라 알아보는 것이다."},
+blue:{color:"#1E90FF",title:"파랑 — 조심",text:"속도보다 각도를 선택한다."},
+red:{color:"#FF4500",title:"빨강 — 충동",text:"망설이지 않은 선택은 흔적을 남긴다."},
+black:{color:"#000000",title:"검정 — 침묵",text:"말하지 않는 것도 하나의 응답이다."},
+silver:{color:"#C0C0C0",title:"은색 — 의심",text:"의심은 판단을 정제한다."},
+green:{color:"#32CD32",title:"초록 — 회복",text:"되돌아오는 데에도 방향이 있다."},
+orange:{color:"#FFA500",title:"주황 — 시도",text:"결과보다 먼저 남는 것은 시도다."}
 };
 
-let scoreMap = {gold:0,blue:0,red:0,black:0,silver:0,green:0,orange:0};
-let currentQ = 0;
+let score={gold:0,blue:0,red:0,black:0,silver:0,green:0,orange:0};
+let qi=0, selected=null;
+const quiz=document.getElementById("quiz");
 
-const quizContainer = document.getElementById('quizContainer');
-const nextBtn = document.getElementById('nextBtn');
-const resultContainer = document.getElementById('resultContainer');
-const resultCircle = document.getElementById('resultCircle');
-const resultTitle = document.getElementById('resultTitle');
-const resultText = document.getElementById('resultText');
+function render(){
+  const q=questions[qi];
+  quiz.innerHTML=`
+    <div class="question-card">
+      <h2>Q${qi+1}. ${q.q}</h2>
+      <div class="options">
+        ${q.o.map((v,i)=>`
+          <div class="option" onclick="pick(${i})">
+            <div class="option-num">${i+1}</div>
+            <div class="option-text">${v.text}</div>
+          </div>
+        `).join("")}
+      </div>
+    </div>`;
+}
+window.pick=i=>{
+  document.querySelectorAll(".option").forEach(o=>o.classList.remove("active"));
+  document.querySelectorAll(".option")[i].classList.add("active");
+  selected=i;
+};
 
-function showQuestion(idx){
-  const q = questions[idx];
-  quizContainer.innerHTML = '';
-  const card = document.createElement('div');
-  card.className = 'question-card';
-  card.style.opacity=0;
+document.getElementById("nextBtn").onclick=()=>{
+  if(selected===null)return alert("선택해주세요");
+  score[questions[qi].o[selected].c]++;
+  selected=null;
+  qi++;
+  qi<questions.length ? render() : showResult();
+};
 
-  let optionsHTML = '';
-  q.options.forEach((opt,i)=>{
-    optionsHTML += `<label>
-      <input type="radio" name="q${idx}" value="${i}">
-      <span>${i+1}</span>
-      <div class="option-text">${opt.text}</div>
-    </label>`;
-  });
+function showResult(){
+  quiz.style.display="none";
+  document.getElementById("nextBtn").style.display="none";
+  document.getElementById("result").style.display="block";
 
-  card.innerHTML = `<h2>Q${idx+1}. ${q.q}</h2>
-                    <div class="options">${optionsHTML}</div>`;
-  quizContainer.appendChild(card);
-  setTimeout(()=>{card.style.opacity=1;},50);
+  const res=Object.keys(score).reduce((a,b)=>score[a]>score[b]?a:b);
+  const d=colorData[res];
+
+  document.getElementById("resCircle").style.background=d.color;
+  document.getElementById("resTitle").innerText=d.title;
+  document.getElementById("resText").innerText=d.text;
 }
 
-showQuestion(currentQ);
-
-nextBtn.addEventListener('click',()=>{
-  const selected = document.querySelector(`input[name=q${currentQ}]:checked`);
-  if(!selected){ alert('점수를 선택해주세요!'); return;}
-
-  const optIdx = parseInt(selected.value);
-  const color = questions[currentQ].options[optIdx].color;
-  scoreMap[color] += 1; // 1점씩 추가
-
-  currentQ++;
-  if(currentQ<questions.length){
-    const oldCard = document.querySelector('.question-card');
-    oldCard.style.opacity=0;
-    setTimeout(()=>{ showQuestion(currentQ); },400);
-  } else {
-    quizContainer.style.display='none';
-    nextBtn.style.display='none';
-    resultContainer.style.display='block';
-    setTimeout(()=>{resultContainer.style.opacity=1;},50);
-
-    let maxScore=-1;
-    let res='gold';
-    for(const c in scoreMap){
-      if(scoreMap[c]>maxScore){ maxScore=scoreMap[c]; res=c;}
-    }
-    resultCircle.style.background=tabData[res].color;
-    resultTitle.innerText = tabData[res].title;
-    resultText.innerHTML = tabData[res].text.replace(/\n/g,'<br>');
-  }
-});
-});
+render();
 </script>
 
 </body>
 </html>
+
+
+
+
